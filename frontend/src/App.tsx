@@ -11,7 +11,7 @@ const App: React.FC = () => {
 
   return (
     <div className='app-container'>
-      <Sidebar handleSelectedCustomer={handleSelectedCustomer} />
+      <Sidebar handleSelectedCustomer={handleSelectedCustomer} selectedCustomerId={selectedCustomerId} />
       <MainBody selectedCustomerId={selectedCustomerId} />
     </div>
   );

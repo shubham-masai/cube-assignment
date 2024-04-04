@@ -9,15 +9,16 @@ interface Customer {
 interface CustomerListProps {
     customer: Customer;
     handleSelectedCustomer: (id: string) => void;
+    isSelected?: boolean;
 }
 
-const CustomerList: React.FC<CustomerListProps> = ({ customer, handleSelectedCustomer }) => {
+const CustomerList: React.FC<CustomerListProps> = ({ customer, handleSelectedCustomer,isSelected = false}) => {
     const handleClick = () => {
         handleSelectedCustomer(customer._id);
     }
 
     return (
-        <div className='customer-card' onClick={handleClick}>
+        <div className={`customer-card ${isSelected ? 'selected' : ''}`} onClick={handleClick}>
             <h3>{customer.name}</h3>
             <p>{customer.title}</p>
         </div>

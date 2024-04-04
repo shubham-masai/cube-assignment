@@ -10,13 +10,14 @@ interface Customer {
 
 interface SidebarProps {
     handleSelectedCustomer: (id: string) => void;
+    selectedCustomerId: string | null;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ handleSelectedCustomer }) => {
+const Sidebar: React.FC<SidebarProps> = ({ handleSelectedCustomer, selectedCustomerId }) => {
     const [list, setList] = useState<Customer[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const sidebarRef = useRef<HTMLDivElement>(null);
 
     const fetchUserList = async () => {
         try {
@@ -30,29 +31,29 @@ const Sidebar: React.FC<SidebarProps> = ({ handleSelectedCustomer }) => {
             setLoading(false);
         }
     };
+
     const handleScroll = () => {
-        if (containerRef.current) {
-            const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
-            if (scrollHeight - scrollTop === clientHeight && !loading) {
-                fetchUserList();  // this gives error
+        if (sidebarRef.current) {
+            const { scrollTop, clientHeight, scrollHeight } = sidebarRef.current;
+            if (scrollTop + clientHeight >= scrollHeight && !loading) {
+                console.log("bottom reached...");
+                fetchUserList();
             }
         }
     };
 
     useEffect(() => {
-
         fetchUserList();
-    }, [page]);
-
-
+    }, []);
 
     return (
-        <div className='sidebar' ref={containerRef} onScroll={handleScroll}>
+        <div className='sidebar' ref={sidebarRef} onScroll={handleScroll}>
             {list?.map((customer, index) => (
                 <CustomerList
                     key={customer._id + index}
                     customer={customer}
                     handleSelectedCustomer={handleSelectedCustomer}
+                    isSelected={selectedCustomerId === customer._id}
                 />
             ))}
             {loading && <div className="spinner"></div>}
